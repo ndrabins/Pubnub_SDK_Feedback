@@ -31,6 +31,9 @@ export default class App extends React.Component {
         CreateChannel:{
           screen: CreateChannelScreen
         },
+        JoinChannel:{
+          screen: JoinChannelScreen
+        },
       }, {
         tabBarPosition: 'bottom',
         animationEnabled: true,
@@ -53,7 +56,7 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Constants.statusBarHeight,
+    // paddingTop: Constants.statusBarHeight,
     backgroundColor: "#FFF"
   }
 });

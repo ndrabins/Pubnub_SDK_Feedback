@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, } from 'react-native';
+import { StyleSheet, View, } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Button, Icon } from 'react-native-elements';
+import { Button, Icon, Header, Text} from 'react-native-elements';
 
 import * as actions from '../actions';
 import { connect } from 'react-redux';
@@ -19,7 +19,6 @@ class ChatScreen extends Component {
   static navigationOptions = {
     tabBarLabel: 'Chat',
     title: 'Chat',
-    // Note: By default the icon is only shown on iOS. Search the showIcon option below.
   };
 
   constructor(props) {
@@ -69,7 +68,6 @@ class ChatScreen extends Component {
     //     });
     //   });
     // });
-    console.log("YOOO" + this.props.username);
   }
 
   render() {
@@ -79,15 +77,21 @@ class ChatScreen extends Component {
       //   title="Go to Login"
       // />
       <View style={styles.container}> 
-        <Text>Chat Chat </Text>
-        <Text>Chat Chat </Text>
-        <Text>Chat Chat </Text>
-        <Text>Chat Chat </Text>
-        <Text>Chat Chat </Text>
-        <Text>Chat Chat </Text>
-        <Text>{this.props.username}</Text>
-        <Text>Chat Chat </Text>
-        <Text>Chat Chat </Text>
+        <Header
+          centerComponent={{ text: 'CHANNEL NAME', }} 
+          backgroundColor={"#03A9F4"}
+        />
+        <View style={{marginTop:70}}>
+          <Text>Chat Chat </Text>
+          <Text>Chat Chat </Text>
+          <Text>Chat Chat </Text>
+          <Text>Chat Chat </Text>
+          <Text>Chat Chat </Text>
+          <Text>Chat Chat </Text>
+          <Text>{this.props.username}</Text>
+          <Text>Chat Chat </Text>
+          <Text>Chat Chat </Text>
+        </View>
       </View> 
     );
   }

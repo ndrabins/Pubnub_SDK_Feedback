@@ -1,25 +1,59 @@
 import React, { Component } from "react";
 import { View } from "react-native";
+import { FormLabel, FormInput, Button, Text, Header} from 'react-native-elements';
 
-import { Button, Text } from "react-native-elements";
+import * as actions from '../actions';
+import { connect } from 'react-redux';
 
 class CreateChannelScreen extends Component {
+  static navigationOptions = {
+    tabBarLabel: 'Create',
+  };
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      channelName: "",
+    };
+  }
+
+  setChannelName(value) {
+    this.setState({ channelName: value });
+  }
+
+  createChannel() {
+    console.log(this.state.channelName);
+    this.props.navigation.navigate('Chat');
+  }
+  
   render() {
     return (
       <View>
-        <Button
-          onPress={() => this.props.navigation.navigate("Login")}
-          title="Go to Login"
+         <Header
+          centerComponent={{ text: 'CREATE CHANNEL', }} 
+          backgroundColor={"#03A9F4"}
         />
-        <Text>CreateChannelScreen</Text>
-        <Text>CreateChannelScreen</Text>
-        <Text>CreateChannelScreen</Text>
-        <Text>CreateChannelScreen</Text>
-        <Text>CreateChannelScreen</Text>
-        <Text>CreateChannelScreen</Text>
+        <View style={{marginTop:70}}>
+          <FormInput 
+            placeholder="Enter Chat Name"
+            onChangeText={text => this.setChannelName(text)}
+            value={this.state.channelName}
+          />
+          <Button
+            onPress={() => this.createChannel()}
+            title="Create Channel"
+          />
+          <Text>CreateChannelScreen</Text>
+          <Text>CreateChannelScreen</Text>
+          <Text>CreateChannelScreen</Text>
+          <Text>CreateChannelScreen</Text>
+          <Text>CreateChannelScreen</Text>
+          <Text>CreateChannelScreen</Text>
+        </View>
       </View>
     );
   }
 }
 
-export default CreateChannelScreen;
+export default connect(null, actions)(CreateChannelScreen);

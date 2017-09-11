@@ -27,7 +27,6 @@ class LoginScreen extends Component {
   login(value){
     this.props.LoginWithUsername(value);
     this.props.navigation.navigate('Chat');
-    console.log("Logging in");
   }  
 
   setLoginName(value) {
@@ -38,9 +37,9 @@ class LoginScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text h1>Login</Text>
+        <Text h1>PubNub Chat</Text>
         <FormInput 
-          placeholder="Enter Chat Name"
+          placeholder="Enter username"
           onChangeText={text => this.setLoginName(text)}
           value={this.state.chatInput}
         />
