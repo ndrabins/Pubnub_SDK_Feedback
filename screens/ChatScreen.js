@@ -3,6 +3,9 @@ import { StyleSheet, View, Text, } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Button, Icon } from 'react-native-elements';
 
+import * as actions from '../actions';
+import { connect } from 'react-redux';
+
 import ChatEngineCore from 'chat-engine'
 import ChatEngineGravatar from 'chat-engine-gravatar'
 
@@ -66,6 +69,7 @@ class ChatScreen extends Component {
     //     });
     //   });
     // });
+    console.log("YOOO" + this.props.username);
   }
 
   render() {
@@ -74,9 +78,14 @@ class ChatScreen extends Component {
       //   onPress={() => this.props.navigation.navigate('Login')}
       //   title="Go to Login"
       // />
-      <View> 
+      <View style={styles.container}> 
         <Text>Chat Chat </Text>
         <Text>Chat Chat </Text>
+        <Text>Chat Chat </Text>
+        <Text>Chat Chat </Text>
+        <Text>Chat Chat </Text>
+        <Text>Chat Chat </Text>
+        <Text>{this.props.username}</Text>
         <Text>Chat Chat </Text>
         <Text>Chat Chat </Text>
       </View> 
@@ -84,12 +93,19 @@ class ChatScreen extends Component {
   }
 }
 
-export default ChatScreen;
+function mapStateToProps({ chatApp }) {
+  return { username: chatApp.userName };  
+}
 
+export default connect(mapStateToProps, actions)(ChatScreen);
 
 const styles = StyleSheet.create({
   icon: {
     width: 26,
     height: 26,
   },
+  container:{
+    flex:1,
+    backgroundColor:"#FFF"
+  }
 });

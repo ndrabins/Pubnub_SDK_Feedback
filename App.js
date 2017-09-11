@@ -1,11 +1,14 @@
 import Expo, { Constants } from "expo";
 import React from "react";
+import { Provider } from 'react-redux';
+import store from './store';
 import { StyleSheet, Text, View, Dimensions } from "react-native";
 import {
   TabNavigator,
   StackNavigator,
   DrawerNavigator
 } from "react-navigation";
+
 
 import LoginScreen from "./screens/LoginScreen";
 import ChatScreen from "./screens/ChatScreen";
@@ -22,38 +25,27 @@ export default class App extends React.Component {
         Login: {
           screen: LoginScreen
         },
-        main: {
-          screen: TabNavigator(
-            {
-              Chat: {
-                screen: ChatScreen
-              },
-              Chat: {
-                screen: ChatScreen
-              }
-            },
-            {
-              tabBarPosition: "bottom",
-              animationEnabled: true,
-              tabBarOptions: {
-                labelStyle: { fontSize: 12 }
-              }
-            }
-          )
-        }
-      },
-      {
-        navigationOptions: {
-          tabBarVisible: false,
+        Chat: {
+          screen: ChatScreen
         },
-        lazyLoad: true
-      }
-    );
+        CreateChannel:{
+          screen: CreateChannelScreen
+        },
+      }, {
+        tabBarPosition: 'bottom',
+        animationEnabled: true,
+        tabBarOptions: {
+          activeTintColor: '#FFF',
+        },
+      });
+      
 
     return (
-      <View style={styles.container}>
-        <MainNavigator style={{ width: Dimensions.get("window").width }} />
-      </View>
+      <Provider store={store}>
+        <View style={styles.container}>
+          <MainNavigator />
+        </View>
+      </Provider>
     );
   }
 }
