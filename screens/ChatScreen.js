@@ -1,24 +1,17 @@
-import React, { Component } from 'react';
-import { StyleSheet, View, } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { Button, Icon, Header, Text} from 'react-native-elements';
+import React, { Component } from "react";
+import { StyleSheet, View, ScrollView, FlatList, } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { Button, Icon, Header, Text, FormInput } from "react-native-elements";
 
-import * as actions from '../actions';
-import { connect } from 'react-redux';
+import * as actions from "../actions";
+import { connect } from "react-redux";
 
-import ChatEngineCore from 'chat-engine'
-import ChatEngineGravatar from 'chat-engine-gravatar'
-
-const ChatEngine = ChatEngineCore.create({
-  publishKey: "pub-c-0fb6e2c9-c3fa-4dbc-9c8d-86a3813c73c8",
-  subscribeKey: "sub-c-e3f6d3fe-934e-11e7-a7b2-42d877d8495e"
-});
-
+import ChatEngineGravatar from "chat-engine-gravatar";
 
 class ChatScreen extends Component {
   static navigationOptions = {
-    tabBarLabel: 'Chat',
-    title: 'Chat',
+    tabBarLabel: "Chat",
+    title: "Chat"
   };
 
   constructor(props) {
@@ -28,7 +21,7 @@ class ChatScreen extends Component {
 
     this.state = {
       chatInput: "",
-      messages : [],
+      messages: []
     };
   }
 
@@ -38,78 +31,88 @@ class ChatScreen extends Component {
 
   sendChat() {
     if (this.state.chatInput) {
-      this.state.lobby.emit("message", {
-        text: this.state.chatInput
-      });
+      this.props.sendMessage(this.props.channelName, this.state.chatInput)
       console.log(this.state.chatInput);
       this.setState({ chatInput: "" });
     }
   }
 
   componentDidMount() {
-    // ChatEngine.connect(username, {
-    //   signedOnTime: now,
-    //   email: new Date()
-    // });
-
-    // ChatEngine.on("$.ready", data => {
-    //   const me = data.me;
-    //   console.log('ChatEngine ready to go!');
-    //   me.plugin(ChatEngineGravatar());
-
-    //   this.setState({
-    //     lobby : new ChatEngine.Chat('lobby')
-    //   })
-
-    //   this.state.lobby.on("message", payload => {
-    //     this.messages.push(payload);
-    //     this.setState({
-    //       messages: this.messages
-    //     });
-    //   });
-    // });
+    this.props.fetchMessages(this.props.channelName);
   }
 
   render() {
     return (
-      // <Button
-      //   onPress={() => this.props.navigation.navigate('Login')}
-      //   title="Go to Login"
-      // />
-      <View style={styles.container}> 
+      <View style={styles.container}>
         <Header
-          centerComponent={{ text: 'CHANNEL NAME', }} 
+          centerComponent={{ text: `Chat channel - ${this.props.channelName}` }}
           backgroundColor={"#03A9F4"}
         />
-        <View style={{marginTop:70}}>
-          <Text>Chat Chat </Text>
-          <Text>Chat Chat </Text>
-          <Text>Chat Chat </Text>
-          <Text>Chat Chat </Text>
-          <Text>Chat Chat </Text>
-          <Text>Chat Chat </Text>
-          <Text>{this.props.username}</Text>
-          <Text>Chat Chat </Text>
-          <Text>Chat Chat </Text>
+        <View style={styles.messageContainer}>
+          <ScrollView style={styles.messageList}>
+            <FlatList
+              data={this.state.messages}
+              renderItem={({item}) =>
+                <View style={styles.message}>
+                  <Image style = {{ width: 100, height: 100 }} source = {{ uri: 'https:' + item.sender.state().gravatar, cache: 'reload' }} />
+                  <Text style={styles.item}>{item.sender.uuid}: {item.data.text}</Text>
+                </View>
+                }
+            />
+          </ScrollView>
+          <View style={styles.messageEntry}>
+
+            <View style={{flex:1, flexDirection:"row", justifyContent:"center",}}>
+              <FormInput
+                placeholder="Enter Chat Message Here!"
+                onChangeText={text => this.setChatInput(text)}
+                value={this.state.chatInput}
+                containerStyle={{width:"80%"}}
+              />
+              <Icon
+                name='send'
+                size={30}
+                color='#03A9F4'
+                onPress={() => {
+                  this.sendChat();
+                }} />
+            </View>
+          </View>
         </View>
-      </View> 
+      </View>
     );
   }
 }
 
 function mapStateToProps({ chatApp }) {
-  return { username: chatApp.userName };  
+  return { username: chatApp.userName, channelName: chatApp.selectedChannel };
 }
 
 export default connect(mapStateToProps, actions)(ChatScreen);
 
 const styles = StyleSheet.create({
-  icon: {
-    width: 26,
-    height: 26,
+  messageContainer:{
+    flex: 1,
+    paddingTop: 60
   },
-  container:{
-    flex:1,
-    backgroundColor:"#FFF"
-  }
+  container: {
+    flex: 1,
+    backgroundColor: "#FFF"
+  },
+  item: {
+    padding: 10,
+    fontSize: 18,
+    height: 44
+  },
+  messageList: {
+    flex: 0.5
+  },
+  messageEntry:{
+    flex: 0.1,
+    marginBottom: 10
+  },
+  message: {
+    flex: 1,
+    flexDirection: "column"
+  },
 });

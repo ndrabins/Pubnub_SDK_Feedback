@@ -24,6 +24,7 @@ class CreateChannelScreen extends Component {
 
   createChannel() {
     console.log(this.state.channelName);
+    this.props.CreateChatChannel(this.state.channelName);
     this.props.navigation.navigate('Chat');
   }
   
@@ -44,12 +45,6 @@ class CreateChannelScreen extends Component {
             onPress={() => this.createChannel()}
             title="Create Channel"
           />
-          <Text>CreateChannelScreen</Text>
-          <Text>CreateChannelScreen</Text>
-          <Text>CreateChannelScreen</Text>
-          <Text>CreateChannelScreen</Text>
-          <Text>CreateChannelScreen</Text>
-          <Text>CreateChannelScreen</Text>
         </View>
       </View>
     );

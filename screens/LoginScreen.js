@@ -31,7 +31,6 @@ class LoginScreen extends Component {
 
   setLoginName(value) {
     this.setState({ loginName: value });
-    console.log(value);
   }
 
   render() {

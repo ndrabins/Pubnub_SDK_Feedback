@@ -34,6 +34,9 @@ export default class App extends React.Component {
         JoinChannel:{
           screen: JoinChannelScreen
         },
+        Users:{
+          screen: UserSearchScreen
+        }
       }, {
         tabBarPosition: 'bottom',
         animationEnabled: true,
