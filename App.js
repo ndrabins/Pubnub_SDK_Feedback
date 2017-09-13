@@ -19,6 +19,10 @@ import UserSearchScreen from "./screens/UserSearchScreen";
 import { Button } from "react-native-elements";
 
 export default class App extends React.Component {
+  componentDidMount(){
+    console.disableYellowBox = true;
+  }
+
   render() {
     const MainNavigator = TabNavigator(
       {

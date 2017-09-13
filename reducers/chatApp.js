@@ -11,6 +11,7 @@ const INITIAL_STATE = {
   selectedChannel: 'null',
   currentChat : null,
   messages: [],
+  users: [],
 };
 
 export default function(state = INITIAL_STATE, action) {
@@ -20,7 +21,7 @@ export default function(state = INITIAL_STATE, action) {
     case LOGIN_WITH_USERNAME:
       return {...state, userName: action.payload}
     case CREATE_NEW_CHANNEL:
-      return {...state, selectedChannel: action.payload, currentChat: action.currentChat};
+      return {...state, selectedChannel: action.payload, currentChat: action.currentChat, users: action.users};
     case SEND_MESSAGE:
       return state;
     default:

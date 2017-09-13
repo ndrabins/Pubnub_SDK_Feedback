@@ -29,6 +29,13 @@ export const fetchMessages = chat => {
 
 export const sendMessage = (chat, message) => {
   return dispatch => {
+    const list = [
+      "value1", "value2",
+    ]
+
+    console.log(list);
+
+    console.log(Object.keys(chat.users));
     console.log("sending message");
     chat.emit("message", { text: message });
     dispatch({ type: SEND_MESSAGE });
@@ -58,10 +65,12 @@ export const LoginWithUsername = name => {
 export const CreateChatChannel = channelName => async dispatch => {
   console.log(channelName);
   let currentChat = new ChatEngine.Chat(channelName);
+  let users = Object.keys(currentChat.users);
   console.log("new chat created");
   dispatch({
     type: CREATE_NEW_CHANNEL,
     payload: channelName,
-    currentChat: currentChat
+    currentChat: currentChat,
+    users: users
   });
 };

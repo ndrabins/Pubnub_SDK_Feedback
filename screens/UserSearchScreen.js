@@ -15,9 +15,7 @@ class UserSearchScreen extends Component {
   };
 
   getListItems(){
-    let usersArray = Object.keys(this.props.currentChat.users);
-    console.log(usersArray);
-    let items = usersArray.map((item, i) => (
+    let items = list.map((item, i) => (
       <ListItem
         key={i}
         title={item}
@@ -60,6 +58,7 @@ function mapStateToProps({ chatApp }) {
     username: chatApp.userName,
     channelName: chatApp.selectedChannel,
     currentChat: chatApp.currentChat,
+    users: chatApp.users,
   };
 }
 
