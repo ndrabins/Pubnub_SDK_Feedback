@@ -1,7 +1,9 @@
 # Pubnub_SDK_Feedback
 
+```
 git clone https://github.com/ndrabins/Pubnub_SDK_Feedback.git
 npm install
+```
 
 Open with expo client
 
