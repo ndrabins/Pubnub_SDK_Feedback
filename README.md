@@ -10,7 +10,7 @@ Open with expo client
 Tips for testing:
   Currently some functions are broken without proper usage of the app. 
   
-  To use the app in its (awful) current state
+  To use the app in its current state
     1. Login with a name
     2. Create a channel
     3. Type messages in chat
