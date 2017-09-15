@@ -31,7 +31,7 @@ class CreateChannelScreen extends Component {
     return (
       <View>
          <Header
-          centerComponent={{ text: 'CREATE CHANNEL', }} 
+          centerComponent={{ text: 'CREATE / JOIN - CHANNEL', }} 
           backgroundColor={"#03A9F4"}
         />
         <View style={{marginTop:70}}>

@@ -12,7 +12,6 @@ class JoinChannelScreen extends Component {
   };
 
   joinChannel() {
-    console.log("Joining channel");
     this.props.navigation.navigate('Chat');
   }
 

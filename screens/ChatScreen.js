@@ -8,6 +8,8 @@ import { connect } from "react-redux";
 
 import ChatEngineGravatar from "chat-engine-gravatar";
 
+import Message from '../Components/Message';
+
 class ChatScreen extends Component {
   static navigationOptions = {
     tabBarLabel: "Chat",
@@ -27,34 +29,42 @@ class ChatScreen extends Component {
 
   setChatInput(value) {
     this.setState({ chatInput: value });
+
+    if(value !== ""){
+      this.props.currentChat.typingIndicator.startTyping();
+    }else{
+      this.props.currentChat.typingIndicator.stopTyping();
+    }
+    // this.props.currentChat.typingIndicator.startTyping()
   }
 
   sendChat() {
     if (this.state.chatInput) {
       let usersArray = Object.keys(this.props.currentChat.users);
-      // console.log("usersArray");
 
       this.props.sendMessage(this.props.currentChat, this.state.chatInput);
+      this.props.currentChat.typingIndicator.stopTyping();
       this.setState({ chatInput: "" });
-      // console.log(this.props.messages);
       
     }
   }
-
-  // componentDidMount() {
-  //   this.props.fetchMessages(this.props.channelName);
-  //   console.log("passed fetch messages");
-  // }
 
   componentDidUpdate(prevProps) {
     // only update chart if the data has changed
     if (prevProps.channelName !== this.props.channelName) {
       this.props.fetchMessages(this.props.currentChat);
-      console.log("updating channel!!");
     }
   }
 
   render() {
+
+    let typing = null;
+    if (this.props.typing === false) {
+      typing = (<Text>No one is typing</Text>);
+    } else {
+      typing = (<Text>{this.props.typing} is typing...</Text>);
+    }
+
     return (
       <View style={styles.container}>
         <Header
@@ -66,27 +76,17 @@ class ChatScreen extends Component {
             <FlatList
               data={this.props.messages}
               renderItem={({ item }) => (
-                <View style={styles.message}>
-                  <Image
-                    style={{ width: 30, height: 30, paddingTop:10 }}
-                    source={{
-                      uri: "https:" + item.sender.state().gravatar,
-                      cache: "reload"
-                    }}
-                  />
-                  <Text style={styles.item}>
-                    {item.sender.uuid}: {item.data.text}
-                  </Text>
-                </View>
+                <Message message={item} />
               )}
             />
           </ScrollView>
           <View style={styles.messageEntry}>
+            {typing}
             <View
               style={{
                 flex: 1,
                 flexDirection: "row",
-                justifyContent: "center"
+                justifyContent: "center",
               }}
             >
               <FormInput
@@ -116,7 +116,8 @@ function mapStateToProps({ chatApp }) {
     username: chatApp.userName,
     channelName: chatApp.selectedChannel,
     currentChat: chatApp.currentChat,
-    messages: chatApp.messages
+    messages: chatApp.messages,
+    typing: chatApp.typing
   };
 }
 
@@ -131,22 +132,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FFF"
   },
-  item: {
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingBottom:20,
-    fontSize: 18,
-    height: 44
-  },
   messageList: {
     flex: 0.5
   },
   messageEntry: {
-    flex: 0.1,
-    marginBottom: 10
+    flex: 0.2,
+    marginBottom: 5,
+    paddingTop:10,
   },
-  message: {
-    flex: 1,
-    flexDirection: "row"
-  }
 });

@@ -35,9 +35,6 @@ export default class App extends React.Component {
         CreateChannel:{
           screen: CreateChannelScreen
         },
-        JoinChannel:{
-          screen: JoinChannelScreen
-        },
         Users:{
           screen: UserSearchScreen
         }

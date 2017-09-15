@@ -7,8 +7,6 @@ import HTMLView from 'react-native-htmlview';
 import * as actions from '../actions';
 import { connect } from 'react-redux';
 
-const htmlContent = `<p><em>italicized stuff</em></p>`;
-
 class LoginScreen extends Component {
   static navigationOptions = {
     tabBarLabel: 'Login',
@@ -26,7 +24,7 @@ class LoginScreen extends Component {
 
   login(value){
     this.props.LoginWithUsername(value);
-    this.props.navigation.navigate('Chat');
+    this.props.navigation.navigate('CreateChannel');
   }  
 
   setLoginName(value) {
@@ -36,10 +34,6 @@ class LoginScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        {/* <HTMLView
-          value={htmlContent}
-          stylesheet={styles}
-        /> */}
         <Text h1>PubNub Chat</Text>
         <FormInput 
           placeholder="Enter username"
@@ -70,9 +64,5 @@ const styles = StyleSheet.create({
     flex:1,
     justifyContent:'center',
     alignItems:'center',
-  },
-  a: {
-    fontWeight: '300',
-    color: '#FF3366', // make links coloured pink
   },
 });

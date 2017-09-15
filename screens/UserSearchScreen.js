@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { View } from "react-native";
 import { FormLabel, FormInput, Button, Text, Header, List, ListItem} from 'react-native-elements';
 
+import _ from 'lodash';
+
 import * as actions from '../actions';
 import { connect } from 'react-redux';
 
@@ -14,14 +16,27 @@ class UserSearchScreen extends Component {
     tabBarLabel: 'Users',
   };
 
-  getListItems(){
-    let items = list.map((item, i) => (
-      <ListItem
-        key={i}
-        title={item}
-      />
-    ));
-    return items;
+  getOnlineUsers()
+  {
+    console.log("User list");
+    // console.log(this.props.users);
+    let test = {
+      something: {stuff:"stuff"},
+      stuff: {stuff:"stuff"},
+    }
+    // test = this.props.users;
+    console.log(test);
+    
+    let onlineUserList = _.map(test, (user, key) => {
+      console.log("ITERATING");
+      return (
+        <ListItem
+          key={key}
+          title={"stuff"}
+        />
+      );
+    });
+    return onlineUserList;
   }
 
   render() {
@@ -36,13 +51,13 @@ class UserSearchScreen extends Component {
     return (
       <View>
         <Header
-          centerComponent={{ text: 'Users', }} 
+          centerComponent={{ text: `Users - ${this.props.channelName}`, }} 
           backgroundColor={"#03A9F4"}
         />
         <View style={{marginTop:70}}>
           <List>
           {
-            this.getListItems()
+            this.getOnlineUsers()
           }
         </List>
         </View>

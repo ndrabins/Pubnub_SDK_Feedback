@@ -2,13 +2,17 @@ import {
   FETCH_MESSAGES,
   LOGIN_WITH_USERNAME,
   CREATE_NEW_CHANNEL,
-  SEND_MESSAGE
+  SEND_MESSAGE,
+  TYPING_UPDATE
 } from "../actions/types";
 
 import ChatEngineCore from "chat-engine";
 import ChatEngineGravatar from "chat-engine-gravatar";
+import ChatEngineTypingIndicator from "chat-engine-typing-indicator";
+import ChatEngineMarkdown from "chat-engine-markdown";
+import ChantEngineOnlineUserSearch from "chat-engine-online-user-search";
 
-export const ChatEngine = ChatEngineCore.create({
+const ChatEngine = ChatEngineCore.create({
   publishKey: "pub-c-0fb6e2c9-c3fa-4dbc-9c8d-86a3813c73c8",
   subscribeKey: "sub-c-e3f6d3fe-934e-11e7-a7b2-42d877d8495e"
 });
@@ -44,7 +48,7 @@ export const sendMessage = (chat, message) => {
 
 export const LoginWithUsername = name => {
   return dispatch => {
-    console.log("Loggin in with" + name);
+    console.log("Loggin in with " + name);
     const now = new Date().getTime();
 
     ChatEngine.connect(name, {
@@ -58,6 +62,10 @@ export const LoginWithUsername = name => {
       console.log("Chat engine is ready!");
       const me = data.me;
       me.plugin(ChatEngineGravatar());
+
+      ChatEngine.global.on('$.online.*', (payload) => {
+        console.log("User online: " + payload.user.uuid);
+      });
     });
   };
 };
@@ -65,12 +73,37 @@ export const LoginWithUsername = name => {
 export const CreateChatChannel = channelName => async dispatch => {
   console.log(channelName);
   let currentChat = new ChatEngine.Chat(channelName);
-  let users = Object.keys(currentChat.users);
-  console.log("new chat created");
+
+  currentChat.plugin(ChatEngineMarkdown({}));
+  currentChat.plugin(ChatEngineTypingIndicator({ timeout: 5000 }));
+  currentChat.plugin(ChantEngineOnlineUserSearch({}));
+
+  currentChat.on('$typingIndicator.startTyping', (payload) => {
+    dispatch({
+      type: TYPING_UPDATE, payload: payload.sender.uuid
+    });
+  });
+
+  currentChat.on('$typingIndicator.stopTyping', (payload) => {
+    dispatch({
+      type: TYPING_UPDATE, payload: false
+    });
+  });
+
+  // currentChat.on('$.online.*', (payload) => {
+  //   console.log("User online: " + payload.user.uuid);
+  // });
+
+
+
+  // let users = currentChat.users;
+  // console.log("new chat created");
+  // console.log(currentChat);
+  // console.log(users);
+
   dispatch({
     type: CREATE_NEW_CHANNEL,
     payload: channelName,
     currentChat: currentChat,
-    users: users
   });
 };

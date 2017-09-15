@@ -2,7 +2,8 @@ import {
   FETCH_MESSAGES,
   LOGIN_WITH_USERNAME,
   CREATE_NEW_CHANNEL,
-  SEND_MESSAGE
+  SEND_MESSAGE,
+  TYPING_UPDATE
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -12,6 +13,7 @@ const INITIAL_STATE = {
   currentChat : null,
   messages: [],
   users: [],
+  typing: false,
 };
 
 export default function(state = INITIAL_STATE, action) {
@@ -21,9 +23,11 @@ export default function(state = INITIAL_STATE, action) {
     case LOGIN_WITH_USERNAME:
       return {...state, userName: action.payload}
     case CREATE_NEW_CHANNEL:
-      return {...state, selectedChannel: action.payload, currentChat: action.currentChat, users: action.users};
+      return {...state, selectedChannel: action.payload, currentChat: action.currentChat};
     case SEND_MESSAGE:
       return state;
+    case TYPING_UPDATE:
+      return {...state, typing: action.payload};
     default:
       return state;
   }
