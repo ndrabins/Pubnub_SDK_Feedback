@@ -3,7 +3,9 @@ import {
   LOGIN_WITH_USERNAME,
   CREATE_NEW_CHANNEL,
   SEND_MESSAGE,
-  TYPING_UPDATE
+  TYPING_UPDATE,
+  ONLINE_USER,
+  FIND_USERS
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -28,6 +30,8 @@ export default function(state = INITIAL_STATE, action) {
       return state;
     case TYPING_UPDATE:
       return {...state, typing: action.payload};
+    case FIND_USERS:
+      return {...state, users: action.payload};
     default:
       return state;
   }

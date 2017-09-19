@@ -3,7 +3,9 @@ import {
   LOGIN_WITH_USERNAME,
   CREATE_NEW_CHANNEL,
   SEND_MESSAGE,
-  TYPING_UPDATE
+  TYPING_UPDATE,
+  ONLINE_USER,
+  FIND_USERS
 } from "../actions/types";
 
 import ChatEngineCore from "chat-engine";
@@ -16,6 +18,7 @@ const ChatEngine = ChatEngineCore.create({
   publishKey: "pub-c-0fb6e2c9-c3fa-4dbc-9c8d-86a3813c73c8",
   subscribeKey: "sub-c-e3f6d3fe-934e-11e7-a7b2-42d877d8495e"
 });
+
 
 export const fetchMessages = chat => {
   return dispatch => {
@@ -64,11 +67,32 @@ export const LoginWithUsername = name => {
       me.plugin(ChatEngineGravatar());
 
       ChatEngine.global.on('$.online.*', (payload) => {
+        let userUid = payload.user.uuid;
+        let user = { userUid : true}
+
         console.log("User online: " + payload.user.uuid);
+        dispatch({ type: ONLINE_USER, payload: name });
       });
     });
   };
 };
+
+export const findUsers = (chat, name) => {
+  // chat.plugin(ChantEngineOnlineUserSearch({}));
+  // ChatEngine.global.plugin(ChantEngineOnlineUserSearch({}));
+  console.log(name);
+  // let usersFound = ChatEngine.global.onlineUserSearch.search("test");
+  let usersFound = chat.onlineUserSearch.search(name);
+  console.log(ChatEngine.global);
+  console.log(chat);
+  console.log(usersFound);
+  return dispatch => {
+    dispatch({
+      type: FIND_USERS,
+      payload: ['bobby','timmy'],
+    });
+  }
+}
 
 export const CreateChatChannel = channelName => async dispatch => {
   console.log(channelName);
@@ -90,16 +114,6 @@ export const CreateChatChannel = channelName => async dispatch => {
     });
   });
 
-  // currentChat.on('$.online.*', (payload) => {
-  //   console.log("User online: " + payload.user.uuid);
-  // });
-
-
-
-  // let users = currentChat.users;
-  // console.log("new chat created");
-  // console.log(currentChat);
-  // console.log(users);
 
   dispatch({
     type: CREATE_NEW_CHANNEL,
