@@ -38,7 +38,6 @@ class UserSearchScreen extends Component {
 
   getOnlineUsers() {
     let onlineUserList = _.map(this.props.users, (user, key) => {
-      console.log("ITERATING");
       return <ListItem key={key} title={user} />;
     });
     return onlineUserList;

@@ -10,7 +10,9 @@
     "chat-engine-gravatar": "0.0.5",
     "chat-engine-markdown": "0.0.5",
     "chat-engine-online-user-search": "0.0.5",
+    "chat-engine-random-username": "0.0.3",
     "chat-engine-typing-indicator": "0.0.6",
+    "chat-engine-uploadcare": "0.0.3",
     "expo": "^20.0.0",
     "lodash": "^4.17.4",
     "react": "16.0.0-alpha.12",
@@ -20,6 +22,7 @@
     "react-navigation": "^1.0.0-beta.11",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "uploadcare-widget": "^3.1.3"
   }
 }

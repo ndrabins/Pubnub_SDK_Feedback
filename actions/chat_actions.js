@@ -12,13 +12,16 @@ import ChatEngineCore from "chat-engine";
 import ChatEngineGravatar from "chat-engine-gravatar";
 import ChatEngineTypingIndicator from "chat-engine-typing-indicator";
 import ChatEngineMarkdown from "chat-engine-markdown";
-import ChantEngineOnlineUserSearch from "chat-engine-online-user-search";
+import ChatEngineOnlineUserSearch from "chat-engine-online-user-search";
+import ChatEngineUploadCare from "chat-engine-uploadcare";
+import ChatEngineRandomUserName from "chat-engine-random-username";
+
+import _ from "lodash";
 
 const ChatEngine = ChatEngineCore.create({
   publishKey: "pub-c-0fb6e2c9-c3fa-4dbc-9c8d-86a3813c73c8",
   subscribeKey: "sub-c-e3f6d3fe-934e-11e7-a7b2-42d877d8495e"
 });
-
 
 export const fetchMessages = chat => {
   return dispatch => {
@@ -26,24 +29,12 @@ export const fetchMessages = chat => {
       console.log(payload);
       dispatch({ type: FETCH_MESSAGES, payload: payload });
     });
-
-    // // if this chat receives a message that's not from this sessions
-    // chat.on('$.history.message', function(payload) {
-    //     console.log('old message', payload)
-    // });
   };
 };
 
 export const sendMessage = (chat, message) => {
   return dispatch => {
-    const list = [
-      "value1", "value2",
-    ]
-
-    console.log(list);
-
-    console.log(Object.keys(chat.users));
-    console.log("sending message");
+    console.log(ChatEngine.global);
     chat.emit("message", { text: message });
     dispatch({ type: SEND_MESSAGE });
   };
@@ -51,7 +42,6 @@ export const sendMessage = (chat, message) => {
 
 export const LoginWithUsername = name => {
   return dispatch => {
-    console.log("Loggin in with " + name);
     const now = new Date().getTime();
 
     ChatEngine.connect(name, {
@@ -59,33 +49,45 @@ export const LoginWithUsername = name => {
       email: new Date()
     });
 
-    dispatch({ type: LOGIN_WITH_USERNAME, payload: name });
 
     ChatEngine.on("$.ready", data => {
       console.log("Chat engine is ready!");
       const me = data.me;
       me.plugin(ChatEngineGravatar());
 
-      ChatEngine.global.on('$.online.*', (payload) => {
-        let userUid = payload.user.uuid;
-        let user = { userUid : true}
+      let users = ChatEngine.global.users;
 
-        console.log("User online: " + payload.user.uuid);
-        dispatch({ type: ONLINE_USER, payload: name });
-      });
+      if(users.hasOwnProperty(name)){
+        //give user a random username
+        me.plugin(ChatEngineRandomUserName(ChatEngine.global));
+        console.log(me);
+
+        //replace chosen name with random one
+        dispatch({ type: LOGIN_WITH_USERNAME, payload: me.state().username });
+      } else {
+        console.log( me.state().username);
+        console.log("users list does not contain " + name);
+        dispatch({ type: LOGIN_WITH_USERNAME, payload: name });
+      }
+      console.log(users);
+
+      // ChatEngine.global.on('$.online.*', (payload) => {
+      //   let userUid = payload.user.uuid;
+      //   let user = { userUid : true}
+
+      //   console.log("User online: " + payload.user.uuid);
+      //   dispatch({ type: ONLINE_USER, payload: name });
+      // });
     });
   };
 };
 
 export const findUsers = (chat, name) => {
-  // chat.plugin(ChantEngineOnlineUserSearch({}));
-  // ChatEngine.global.plugin(ChantEngineOnlineUserSearch({}));
-  console.log(name);
+  // chat.plugin(ChatEngineOnlineUserSearch({}));
+  // ChatEngine.global.plugin(ChatEngineOnlineUserSearch({}));
   // let usersFound = ChatEngine.global.onlineUserSearch.search("test");
   let usersFound = chat.onlineUserSearch.search(name);
-  console.log(ChatEngine.global);
-  console.log(chat);
-  console.log(usersFound);
+ 
   return dispatch => {
     dispatch({
       type: FIND_USERS,
@@ -95,29 +97,36 @@ export const findUsers = (chat, name) => {
 }
 
 export const CreateChatChannel = channelName => async dispatch => {
-  console.log(channelName);
-  let currentChat = new ChatEngine.Chat(channelName);
+  let chat = new ChatEngine.Chat(channelName);
 
-  currentChat.plugin(ChatEngineMarkdown({}));
-  currentChat.plugin(ChatEngineTypingIndicator({ timeout: 5000 }));
-  currentChat.plugin(ChantEngineOnlineUserSearch({}));
+  chat.plugin(ChatEngineMarkdown({}));
+  chat.plugin(ChatEngineTypingIndicator({ timeout: 5000 }));
+  chat.plugin(ChatEngineOnlineUserSearch({}));
+  // chat.plugin(ChatEngineUploadCare({}));
 
-  currentChat.on('$typingIndicator.startTyping', (payload) => {
+
+  // Set typing listeners on chat
+  chat.on('$typingIndicator.startTyping', (payload) => {
     dispatch({
       type: TYPING_UPDATE, payload: payload.sender.uuid
     });
   });
 
-  currentChat.on('$typingIndicator.stopTyping', (payload) => {
+  chat.on('$typingIndicator.stopTyping', (payload) => {
     dispatch({
       type: TYPING_UPDATE, payload: false
     });
   });
 
+  //set fileupload on chat
+  // chat.on('$uploadcare.upload', (payload) => {
+  //   console.log('upload', payload.data.cdnUrl, 'from', payload.sender.uuid);
+  // });
+
 
   dispatch({
     type: CREATE_NEW_CHANNEL,
     payload: channelName,
-    currentChat: currentChat,
+    currentChat: chat,
   });
 };
